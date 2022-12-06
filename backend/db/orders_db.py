@@ -11,11 +11,9 @@ except mysql.connector.Error as err:
     exit
     
 
-def insert_new_order(name, phone, address, shipment_date, payment_method, paid):
-        sql = ("INSERT INTO orders "
-        "(name, phone, address, shipment_date, payment_method, paid) "
-        "VALUES (%s, %s, %s, %s, %s, %s)")
-        execute(sql, False, [name, phone, address, shipment_date, payment_method, paid], True)
+def insert_new_order(name, phone, address, shipment_date, payment_method, paid, delivered):
+        sql = ("INSERT INTO orders " "(name, phone, address, shipment_date, payment_method, paid, delivered) " "VALUES (%s, %s, %s, %s, %s, %s, %s)")
+        execute(sql, False, [name, phone, address, shipment_date, payment_method, paid, delivered], True)
 
         
 def remove_order(phone):
@@ -28,18 +26,42 @@ def remove_order(phone):
         return True
     else:
         return False
+    
+    
+def is_order_exists(phone):
+    sql = ("SELECT * FROM orders WHERE phone=%s")
+    execute(sql, True, [phone])
+    row_count = cursor.rowcount
+    if row_count > 0:
+        return True
+    return False
+
+def get_order_details(phone):
+    sql = ("SELECT * FROM orders WHERE phone=%s")
+    order_details = execute(sql, True, [phone])
+    return order_details
 
     
+def update_order(name, phone, address, shipment_date, payment_method, paid, delivered):
+    sql = ("""UPDATE orders SET name = %s, phone = %s, address = %s, shipment_date = %s, payment_method = %s, paid = %s, delivered = %s WHERE phone = %s""")
+    execute(sql, False, [name, phone, address, shipment_date, payment_method, paid, delivered, phone], True)
+        
+    
 def get_all_orders():
-    sql = ("SELECT name, phone, address, shipment_date, payment_method, paid FROM orders ORDER BY shipment_date")
+    sql = ("SELECT name, phone, address, shipment_date, payment_method, paid, delivered FROM orders ORDER BY shipment_date")
     results = execute(sql)
     return results
 
 
 def get_next_five_days_orders():
-    sql = ("SELECT name, phone, address, shipment_date, payment_method, paid FROM orders WHERE shipment_date <= DATE_ADD(CURDATE(), INTERVAL 5 DAY) AND shipment_date >= CURDATE() ORDER BY shipment_date")
+    sql = ("SELECT name, phone, address, shipment_date, payment_method, paid, delivered FROM orders WHERE shipment_date <= DATE_ADD(CURDATE(), INTERVAL 5 DAY) AND shipment_date >= CURDATE() ORDER BY shipment_date")
     results = execute(sql)
     return results
+
+def get_undelivered_orders():
+        sql = ("SELECT name, phone, address, shipment_date, payment_method, paid, delivered FROM orders WHERE delivered = %s")
+        results = execute(sql, False, ['לא נמסר'], False)
+        return results
 
 
 def execute(tuple, single = False, args = {}, commit = False):

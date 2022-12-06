@@ -1,7 +1,10 @@
+@import url(https://fonts.googleapis.com/earlyaccess/opensanshebrewcondensed.css);
+
 * {
     max-width: 1300px;
     margin: auto;
     text-align: center;
+    font-size: 18px;
 }
 
 form{

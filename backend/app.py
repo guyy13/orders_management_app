@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-import orders_db as db
+from db import orders_db as db
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 

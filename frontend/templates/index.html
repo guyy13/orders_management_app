@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>דף הבית</title>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<body>  
+    <img src="{{url_for('static', filename='images/logo.png')}}" class="logo" alt="test">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="/add_new_order" method="GET">
+                    <button type="submit" value="Submit" class="btn btn-info text-nowrap btn-lg">הזמנה חדשה</button>
+                </form>
+            </div>
+            <div class="col">
+                <form action="/remove_order" method="GET">
+                    <button type="submit" value="Submit" class="btn btn-info text-nowrap btn-lg">מחיקת הזמנה</button>
+                </form>
+            </div>
+        
+            <div class="col">
+                <form action="/view_next_five_days_orders" method="GET">
+                    <button type="submit" value="Submit" class="btn btn-info text-nowrap btn-lg">ההזמנות לחמישה ימים הקרובים</button>
+                </form>
+            </div>
+            <div class="col">
+                <form action="/view_all_orders" method="GET">
+                    <button type="submit" value="Submit" class="btn btn-info text-nowrap btn-lg">כל ההזמנות</button>
+                </form>
+            </div>
+        </div>
+
+
+        
+
+    </div>
+
+</body>
+</html>

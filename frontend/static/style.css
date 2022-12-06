@@ -1,0 +1,18 @@
+* {
+    max-width: 1300px;
+    margin: auto;
+    text-align: center;
+}
+
+form{
+    margin: 50px;
+}
+
+h1{
+    padding: 70px;
+}
+
+.logo {
+    margin-top: 20px;
+}
+

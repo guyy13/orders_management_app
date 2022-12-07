@@ -1,0 +1,26 @@
+@import url(https://fonts.googleapis.com/earlyaccess/opensanshebrewcondensed.css);
+
+* {
+    max-width: 1300px;
+    margin: auto;
+    text-align: center;
+    font-size: 18px;
+    direction: rtl;
+}
+
+form{
+    margin: 50px;
+}
+
+h1{
+    padding: 70px;
+}
+
+.logo {
+    margin-top: 20px;
+}
+
+.main_section{
+    margin-top: 20px;
+    border-radius: 10px;
+}

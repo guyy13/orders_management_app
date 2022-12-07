@@ -1,8 +1,9 @@
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-from db import orders_db as db
+import orders_db as db
 
-app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
+app = Flask(__name__)
+#template_folder='../frontend/templates', static_folder='../frontend/static'
 
 @app.route('/')
 def index():
@@ -85,5 +86,20 @@ def view_all_orders_undelivered():
     headings = ("שם מלא ", "מספר טלפון", "כתובת משלוח", "תאריך משלוח", "דרך תשלום", "האם שולם?", "האם נמסר?")
     return render_template('view_undelivered_orders.html', headings=headings, data=order_list)
 
+
+@app.route('/view_analytics', methods=['GET'])
+def view_revenues():
+    units_sold_count = db.get_units_delivered()
+    revenue = units_sold_count[0][0] * 60
+    
+    units_sold = units_sold_count[0][0]
+    return render_template("view_analytics.html", revenue=revenue, units_sold=units_sold)
+
+    
 if __name__ == '__main__':
-    app.run(host="localhost", port=8000, debug=True)
+
+    # For localhost
+    # app.run(host="localhost", port=8000, debug=True)
+    
+    # For Docker
+    app.run(host="0.0.0.0", port=8000 ,debug=True)

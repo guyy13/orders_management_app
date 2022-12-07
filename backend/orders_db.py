@@ -54,14 +54,19 @@ def get_all_orders():
 
 
 def get_next_five_days_orders():
-    sql = ("SELECT name, phone, address, shipment_date, payment_method, paid, delivered FROM orders WHERE shipment_date <= DATE_ADD(CURDATE(), INTERVAL 5 DAY) AND shipment_date >= CURDATE() ORDER BY shipment_date")
+    sql = ("SELECT name, phone, address, shipment_date, payment_method, paid, delivered FROM orders WHERE shipment_date <= DATE_ADD(CURDATE(), INTERVAL 5 DAY) AND shipment_date >= CURDATE() AND delivered = 'לא נמסר' ORDER BY shipment_date;")
     results = execute(sql)
     return results
 
 def get_undelivered_orders():
-        sql = ("SELECT name, phone, address, shipment_date, payment_method, paid, delivered FROM orders WHERE delivered = %s")
+        sql = ("SELECT name, phone, address, shipment_date, payment_method, paid, delivered FROM orders WHERE delivered = %s ORDER BY shipment_date")
         results = execute(sql, False, ['לא נמסר'], False)
         return results
+    
+def get_units_delivered():
+    sql = ("SELECT COUNT(*) FROM orders WHERE delivered = %s")
+    results = execute(sql, False, ['נמסר'], False)
+    return results
 
 
 def execute(tuple, single = False, args = {}, commit = False):

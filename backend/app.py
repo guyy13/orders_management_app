@@ -5,6 +5,9 @@ import orders_db as db
 app = Flask(__name__)
 #template_folder='../frontend/templates', static_folder='../frontend/static'
 
+headings = ("שם מלא ", "מספר טלפון", "כתובת משלוח", "תאריך משלוח", "דרך תשלום", "האם שולם?", "האם נמסר?", "כמות" , "לעידכון", "למחיקה")
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -21,23 +24,33 @@ def add_new_order():
         payment_method = request.form['payment_method']
         paid = request.form['paid']
         delivered = request.form['delivered']
-        db.insert_new_order(name, phone, address, shipment_date, payment_method, paid, delivered)
+        quantity = request.form['quantity']
+        db.insert_new_order(name, phone, address, shipment_date, payment_method, paid, delivered, quantity)
         return render_template('add_new_order.html', success="0")
     
     
 @app.route('/remove_order', methods=['GET', 'POST'])
 def remove_order():
     if request.method == "GET":
-        return render_template('remove_order.html')
+        try:
+            phone = request.args["phone"]
+        except Exception as e:
+            return render_template('remove_order.html')
+        if db.is_order_exists(phone):
+            db.remove_order(phone)
+            return render_template('remove_order.html', success="True")
     else: # POST Method
         phone = request.form['phone']
-        db.remove_order(phone)
-        return render_template('remove_order.html', success="0")
+        if db.is_order_exists(phone):
+            db.remove_order(phone)
+            return render_template('remove_order.html', success="True")
+        else:
+            return render_template('remove_order.html', success="False")
     
     
-@app.route('/is_order_exists', methods=['POST'])
+@app.route('/is_order_exists', methods=['POST', 'GET'])
 def is_order_exists():
-    phone = request.form['phone']
+    phone = request.form['phone'] if request.method == "POST" else request.args["phone"]
     if db.is_order_exists(phone):
         order_details = db.get_order_details(phone)
         name = order_details[1]
@@ -46,12 +59,13 @@ def is_order_exists():
         payment_method = order_details[5]
         paid = order_details[6]
         delivered = order_details[7]
-        return render_template('update_order.html', is_exists="True",name=name, phone=phone, address=address, shimpent_date=shimpent_date, payment_method=payment_method, paid=paid, delivered=delivered)
+        quantity = order_details[8]
+        return render_template('update_order.html', is_exists="True",name=name, phone=phone, address=address, shimpent_date=shimpent_date, payment_method=payment_method, paid=paid, delivered=delivered, quantity=quantity)
     else:
         return render_template('update_order.html', is_exists="False")
         
     
-@app.route('/update_order', methods=['GET', 'POST'])
+@app.route('/update_order/', methods=['GET', 'POST'])
 def update_order():
     if request.method == "GET":
         return render_template('update_order.html')
@@ -63,35 +77,34 @@ def update_order():
         payment_method = request.form['payment_method']
         paid = request.form['paid']
         delivered = request.form['delivered']
-        db.update_order(name, phone, address, shipment_date, payment_method, paid, delivered)
-        return render_template('update_order.html', success="True")
+        quantity = request.form['quantity']
+        db.update_order(name, phone, address, shipment_date, payment_method, paid, delivered, quantity)
+        # return render_template('update_order.html', success="True")
+        return redirect(url_for('view_all_orders'))
     
 @app.route('/view_all_orders', methods=['GET'])
 def view_all_orders():
     order_list = db.get_all_orders()
-    headings = ("שם מלא ", "מספר טלפון", "כתובת משלוח", "תאריך משלוח", "דרך תשלום", "האם שולם?",  "האם נמסר?")
     return render_template('view_all_orders.html', headings=headings, data=order_list)
 
 
 @app.route('/view_next_five_days_orders', methods=['GET'])
 def view_next_five_days_orders():
     order_list = db.get_next_five_days_orders()
-    headings = ("שם מלא ", "מספר טלפון", "כתובת משלוח", "תאריך משלוח", "דרך תשלום", "האם שולם?", "האם נמסר?")
     return render_template('view_next_five_days_orders.html', headings=headings, data=order_list)
 
 
 @app.route('/view_all_orders_undelivered', methods=['GET'])
 def view_all_orders_undelivered():
     order_list = db.get_undelivered_orders()
-    headings = ("שם מלא ", "מספר טלפון", "כתובת משלוח", "תאריך משלוח", "דרך תשלום", "האם שולם?", "האם נמסר?")
     return render_template('view_undelivered_orders.html', headings=headings, data=order_list)
 
 
 @app.route('/view_analytics', methods=['GET'])
 def view_revenues():
     units_sold_count = db.get_units_delivered()
-    revenue = units_sold_count[0][0] * 60
-    
+    print(units_sold_count)
+    revenue = units_sold_count[0][0] * 60 
     units_sold = units_sold_count[0][0]
     return render_template("view_analytics.html", revenue=revenue, units_sold=units_sold)
 

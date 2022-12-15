@@ -1,7 +1,7 @@
 import mysql.connector
 
 try:
-    connection = mysql.connector.connect(host = 'localhost', user = 'root', password = '12345678', port=3306, auth_plugin='mysql_native_password', database='orders_management')
+    connection = mysql.connector.connect(host = 'db', user = 'root', password = '12345678', port=3306, auth_plugin='mysql_native_password', database='orders_management')
     cursor = connection.cursor()
     print("db Connected")
 

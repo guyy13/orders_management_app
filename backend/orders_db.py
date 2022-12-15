@@ -12,8 +12,8 @@ except mysql.connector.Error as err:
     
 
 def insert_new_order(name, phone, address, shipment_date, payment_method, paid, delivered, quantity):
-        sql = ("INSERT INTO orders " "(name, phone, address, shipment_date, payment_method, paid, delivered, quantity) " "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
-        execute(sql, False, [name, phone, address, shipment_date, payment_method, paid, delivered, quantity], True)
+    sql = ("INSERT INTO orders " "(name, phone, address, shipment_date, payment_method, paid, delivered, quantity) " "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
+    execute(sql, False, [name, phone, address, shipment_date, payment_method, paid, delivered, quantity], True)
 
         
 def remove_order(phone):

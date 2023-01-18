@@ -104,8 +104,13 @@ def view_all_orders_undelivered():
 def view_revenues():
     units_sold_count = db.get_units_delivered()
     print(units_sold_count)
-    revenue = units_sold_count[0][0] * 60 
-    units_sold = units_sold_count[0][0]
+    try:
+        revenue = units_sold_count[0][0] * 60 
+        units_sold = units_sold_count[0][0]
+    except:
+        print("No units sold already")
+        revenue = 0
+        units_sold = 0
     return render_template("view_analytics.html", revenue=revenue, units_sold=units_sold)
 
     

@@ -1,8 +1,12 @@
 import mysql.connector
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
 
 try:
-    connection = mysql.connector.connect(host = '172.17.0.3', user = 'root', password = '12345678', port=3306, auth_plugin='mysql_native_password', database='orders_management')
-    cursor = connection.cursor()
+    connection = mysql.connector.connect(host = os.getenv("DATABASE_HOST"), user = os.getenv("DATABASE_USER"), password = os.getenv("DATABASE_PASS"), port=os.getenv("DATABASE_PORT"), auth_plugin='mysql_native_password', database=os.getenv("DATABASE_NAME"))
+    cursor = connection.cursor(buffered=True)
     print("db Connected")
 
 except mysql.connector.Error as err:

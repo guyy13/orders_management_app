@@ -21,8 +21,8 @@ services:
     volumes:
     - orders-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 12345678
-      MYSQL_DATABASE: orders_management
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASS}
+      MYSQL_DATABASE: ${DATABASE_NAME}
 
     ports:
     - "33021:3306"
